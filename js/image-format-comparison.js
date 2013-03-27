@@ -17,6 +17,17 @@
 		queueA.addEventListener("complete", onCompleteQueueA);
 		$$('#btn-load-image-a').addEventListener('click', onClickButtonA);
 
+		function onClickButtonA() {
+			clockA.getDeltaAsString();
+
+			var manifestA = [
+				{id: "rgb", src: 'img/jpeg40.jpg?' + new Date().getTime(), type: createjs.LoadQueue.IMAGE, bytes: 3412341},
+				{id: "alpha", src: 'img/pngalpha32.png?' + new Date().getTime(), type: createjs.LoadQueue.IMAGE, bytes: 5414341}
+			];
+
+			queueA.loadManifest(manifestA);
+		}
+
 		function onCompleteQueueA() {
 			var images = {
 				rgb: queueA.getResult('rgb'),
@@ -27,18 +38,10 @@
 			var delta = clockA.getDeltaAsString();
 			$$('#result-requests-a').innerHTML = 2;
 			$$('#result-time-a').innerHTML = delta;
-
 		}
 
-		function onClickButtonA() {
-			clockA.getDeltaAsString();
+		function populateSelects() {
 
-			var manifestA = [
-				{id: "rgb", src: 'img/jpeg40.jpg?' + new Date().getTime(), type: createjs.LoadQueue.IMAGE, bytes: 3412341},
-				{id: "alpha", src: 'img/pngalpha32.png?' + new Date().getTime(), type: createjs.LoadQueue.IMAGE, bytes: 5414341}
-			];
-
-			queueA.loadManifest(manifestA);
 		}
 
 		drawBackground = function (ctx) {
@@ -57,10 +60,19 @@
 
 		render = function (images) {
 			var canvas = $$('#canvas');
-			canvas.width = 2000;
-			canvas.height = 2000;
+			var w = images.rgb.width;
+			var h = images.rgb.height;
+			canvas.width = w;
+			canvas.height = h;
+			canvas.style.width = w/2+"px";
+			canvas.style.height = h/2+"px";
 			var ctx = canvas.getContext('2d');
-			var rgba = utils.toRgbaFromAlphaChannel(images.rgb, images.alpha);
+			var rgba;
+			if (!images.alpha) {
+				rgba = utils.toRgbaFromAlphaChannel(images.rgb, images.alpha);
+			} else {
+				rgba = utils.renderRGBImage(images.rgb);
+			}
 			drawBackground(ctx);
 			ctx.drawImage(rgba, 0, 0);
 		};

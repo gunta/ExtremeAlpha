@@ -3,7 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <title>Image format comparison</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+    <!-- standard viewport tag to set the viewport to the device's width, Android 2.3 devices need this so 100% width works properly and
+	doesn't allow children to blow up the viewport width-->
+    <meta name="viewport" id="vp" content="initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width"/>
+    <!-- width=device-width causes the iPhone 5 to letterbox the app, so
+        we want to exclude it for iPhone 5 to allow full screen apps -->
+    <meta name="viewport" id="vp" content="initial-scale=1.0,user-scalable=no,maximum-scale=1"
+          media="(device-height: 568px)"/>
     <meta name="apple-mobile-web-app-capable" content="yes"/>
     <link href="http://netdna.bootstrapcdn.com/twitter-bootstrap/2.3.1/css/bootstrap-combined.min.css" rel="stylesheet"
           media="screen">
@@ -28,8 +34,7 @@
             overflow: scroll;
             /*-webtki-backface-visibility: hidden;*/
             -webkit-overflow-scrolling: touch;
-            /*background: red;*/
-
+            background: #4c4c4c;
         }
 
         @media (max-width: 480px) {
@@ -44,8 +49,8 @@
 
         #canvas {
             /*-webkit-transform: scale(0.5, 0.5);*/
-            width: 1000px;
-            height: 1000px;
+            /*width: 1000px;*/
+            /*height: 1000px;*/
         }
     </style>
 
@@ -60,15 +65,36 @@
 <div id="container" class="container">
     <h2 class="hidden-phone">Image format comparison</h2>
 
-    <label for="select-image-a">Image A
-        <select name="select-image-a" id="select-image-a"></select>
-    </label>
+    <form class="form-inline">
+        <label for="select-image-a">RGB A
+            <select name="select-image-a" id="select-image-a">
+                <option value="1"></option>
+            </select>
+        </label>
 
-    <label for="select-image-b">Image B
-        <select name="select-image-b" id="select-image-b"></select>
-    </label>
+        <label for="select-image-alpha-a">Alpha A
+            <select name="select-image-alpha-a" id="select-image-alpha-a">
+                <option value="1"></option>
+            </select>
+        </label>
+        <br />
+
+        <label for="select-image-b">RGB B
+            <select name="select-image-b" id="select-image-b">
+                <option value="1"></option>
+            </select>
+        </label>
+
+        <label for="select-image-alpha-b">Alpha B
+            <select name="select-image-alpha-b" id="select-image-alpha-b">
+                <option value="1"></option>
+            </select>
+        </label>
+
+    </form>
 
     <button class="btn" id="btn-load-image-a">Load Image A</button>
+    <button class="btn" id="btn-load-image-b">Load Image B</button>
 
     <table class="table table-condensed" id="table">
         <thead>

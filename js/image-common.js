@@ -63,3 +63,11 @@ utils.toRgbaFromAlphaChannel = function (rgbImage, alphaChannelImage) {
 		ctx.drawImage(alpha, 0, 0);
 	});
 };
+
+utils.renderRGBImage = function (rgbImage) {
+	var width = rgbImage.width, height = rgbImage.height;
+	return utils.renderToCanvas(width, height, function (ctx) {
+		ctx.clearRect(0, 0, width, height);
+		ctx.drawImage(rgbImage, 0, 0);
+	});
+};
