@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="en-US">
+<head>
+    <meta charset="UTF-8">
+    <title>Image format comparison</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="http://netdna.bootstrapcdn.com/twitter-bootstrap/2.3.1/css/bootstrap-combined.min.css" rel="stylesheet"
+          media="screen">
+    <style type="text/css">
+        body {
+            /*background: #eee;*/
+            -webkit-touch-callout: none;
+            -webkit-text-size-adjust: none;
+            -webkit-user-select: none;
+            -webkit-highlight: none;
+            -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+        }
+
+        #result-time-a, #result-time-b {
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+<div id="container" class="container">
+    <h2>Image format comparison</h2>
+
+    <label for="select-image-a">Image A
+        <select name="select-image-a" id="select-image-a"></select>
+    </label>
+
+    <label for="select-image-b">Image B
+        <select name="select-image-b" id="select-image-b"></select>
+    </label>
+
+    <button class="btn" id="btn-load-image-a">Load Image A</button>
+
+    <table class="table table-hover table-condensed" id="table">
+        <thead>
+        <tr>
+            <th>Image</th>
+            <th>Requests</th>
+            <th>Time</th>
+            <th>Size</th>
+            <th>Progress</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <td>A</td>
+            <td id="result-requests-a">-</td>
+            <td id="result-time-a">-</td>
+            <td id="result-size-a">-</td>
+            <td id="result-progress-a">
+                <div class="progress progress-striped active">
+                    <div class="bar" style="width: 0%;"></div>
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td>B</td>
+            <td id="result-requests-b">-</td>
+            <td id="result-time-b">-</td>
+            <td id="result-size-b">-</td>
+            <td id="result-progress-b">
+                <div class="progress progress-striped ">
+                    <div class="bar" style="width: 0%;"></div>
+                </div>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+
+    <div id="container-image-a">
+        <canvas id="canvas"></canvas>
+    </div>
+
+    <div id="container-image-b">
+
+    </div>
+
+
+    <div id="container-image-x"></div>
+
+</div>
+
+<!--<script src="http://netdna.bootstrapcdn.com/twitter-bootstrap/2.3.1/js/bootstrap.min.js"></script>-->
+<script type="text/javascript" src="components/ftlabs-fastclick/lib/fastclick.js"></script>
+<script type="text/javascript" src="http://code.createjs.com/preloadjs-0.3.0.min.js"></script>
+<script type="text/javascript" src="js/clock.js"></script>
+<script type="text/javascript" src="js/image-common.js"></script>
+<script type="text/javascript" src="js/image-format-comparison.js"></script>
+</body>
+</html>
