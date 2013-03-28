@@ -1,19 +1,15 @@
-module.exports = function(grunt) {
+module.exports = function (grunt) {
 	grunt.initConfig({
 		preload_assets: {
 			options: {
 				template: 'preloadjs',
-//				process: {
-//					id: function(file) {
-//						return file;
-////						return "POP"+ _.camelize(_.strLeftBack(path.normalize(file.src), path.extname(file.src)).replace(/\//g, '_'));
-//					}
-//				},
-//				detect: {
-//					bytes: true,
-//					src: true,
-//					id: true
-//				}
+				detectBytes: false,
+				detectType: false,
+				processId: function (file) {
+					var _ = grunt.util._;
+					var path = require('path');
+					return _.camelize(_.strLeftBack(path.normalize(file.src), path.extname(file.src)).replace(/\//g, '_')).substr(3);
+				}
 			},
 			rgb_manifest: {
 				options: {

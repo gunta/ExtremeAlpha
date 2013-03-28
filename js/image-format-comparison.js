@@ -79,20 +79,32 @@
 			queueA.loadManifest(manifestA);
 		}
 
-		function onCompleteQueueA() {
+		function getFilesizeAsString(rgbBytes, alphaBytes) {
+			var str = "" + Math.floor((rgbBytes + alphaBytes) / 1024) + "kb";
+			if (alphaBytes) {
+				str += " <small>(" + Math.floor((rgbBytes) / 1024) + "kb + " + Math.floor((alphaBytes) / 1024) + "kb" + ")</small>";
+			}
+			return str;
+		}
+
+		function onCompleteQueueA(event) {
 			var images = {
 				rgb: queueA.getResult('rgb')
 			};
+			var rgbBytes = queueA.getResult('rgb', true).byteLength;
+			var alphaBytes = 0;
 			var alpha = queueA.getResult('alpha');
 			if (alpha) {
 				images.alpha = alpha;
+				alphaBytes = queueA.getResult('alpha', true).byteLength;
 			}
 
 			render(images);
 
 			var delta = clockA.getDeltaAsString();
-			$$('#result-requests-a').innerHTML = 2;
+			$$('#result-requests-a').innerHTML = event.target._numItemsLoaded;
 			$$('#result-time-a').innerHTML = delta;
+			$$('#result-size-a').innerHTML = getFilesizeAsString(rgbBytes, alphaBytes);
 		}
 
 		function populateSelects() {
