@@ -11,6 +11,7 @@
     <meta name="viewport" id="vp" content="initial-scale=1.0,user-scalable=no,maximum-scale=1"
           media="(device-height: 568px)"/>
     <meta name="apple-mobile-web-app-capable" content="yes"/>
+    <link rel="icon" type="image/png" href="icon-res/1364455510_color.png" />
     <link href="http://netdna.bootstrapcdn.com/twitter-bootstrap/2.3.1/css/bootstrap-combined.min.css" rel="stylesheet"
           media="screen">
     <style type="text/css">
@@ -37,12 +38,6 @@
             background: #4c4c4c;
         }
 
-        @media (max-width: 480px) {
-            #canvas-wrapper-a {
-                height: 450px;
-            }
-        }
-
         #container {
             padding: 10px;
         }
@@ -52,11 +47,38 @@
             /*width: 1000px;*/
             /*height: 1000px;*/
         }
+
+        .icon-colors-rgb {
+            background: url('icon-res/1364455510_color.png') no-repeat;
+            background-size: 100% auto;
+            width: 16px;
+            height: 16px;
+        }
+
+        .icon-colors-alpha {
+            background: url('icon-res/1364454774_layer_transparent.png') no-repeat;
+            background-size: 100% auto;
+            width: 16px;
+            height: 16px;
+        }
+
+        @media (max-width: 480px) {
+            #canvas-wrapper-a {
+                height: 450px;
+            }
+
+            select {
+                width: 38px;
+            }
+        }
+
+
     </style>
 
     <!--<script src="http://netdna.bootstrapcdn.com/twitter-bootstrap/2.3.1/js/bootstrap.min.js"></script>-->
     <script defer type="text/javascript" src="components/ftlabs-fastclick/lib/fastclick.js"></script>
-    <script defer type="text/javascript" src="http://code.createjs.com/preloadjs-0.3.0.min.js"></script>
+    <!--<script defer type="text/javascript" src="http://code.createjs.com/preloadjs-0.3.0.min.js"></script>-->
+    <script defer type="text/javascript" src="components/preloadjs/preloadjs-NEXT.min.js"></script>
     <script defer type="text/javascript" src="json/rgb_manifest.js"></script>
     <script defer type="text/javascript" src="json/rgba_manifest.js"></script>
     <script defer type="text/javascript" src="json/alpha_manifest.js"></script>
@@ -69,28 +91,25 @@
     <h2 class="hidden-phone">Image format comparison</h2>
 
     <form class="form-inline">
-        <label for="select-image-a">RGB A
+        <label for="select-image-a"><i class="icon-colors-rgb" title="RGB"></i> <strong>A</strong>
             <select name="select-image-a" id="select-image-a">
-                <option value="1"></option>
             </select>
         </label>
 
-        <label for="select-image-alpha-a">Alpha A
+        <label for="select-image-alpha-a"><i class="icon-colors-alpha" title="Alpha"></i> <strong>A</strong>
             <select name="select-image-alpha-a" id="select-image-alpha-a">
-                <option value="1"></option>
+                <option value="">-</option>
             </select>
         </label>
-        <br />
 
-        <label for="select-image-b">RGB B
+        <label for="select-image-b"><i class="icon-colors-rgb" title="RGB"></i> <strong>B</strong>
             <select name="select-image-b" id="select-image-b">
-                <option value="1"></option>
             </select>
         </label>
 
-        <label for="select-image-alpha-b">Alpha B
+        <label for="select-image-alpha-b"><i class="icon-colors-alpha" title="Alpha"></i> <strong>B</strong>
             <select name="select-image-alpha-b" id="select-image-alpha-b">
-                <option value="1"></option>
+                <option value="">-</option>
             </select>
         </label>
 

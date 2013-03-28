@@ -3,6 +3,17 @@ module.exports = function(grunt) {
 		preload_assets: {
 			options: {
 				template: 'preloadjs',
+//				process: {
+//					id: function(file) {
+//						return file;
+////						return "POP"+ _.camelize(_.strLeftBack(path.normalize(file.src), path.extname(file.src)).replace(/\//g, '_'));
+//					}
+//				},
+//				detect: {
+//					bytes: true,
+//					src: true,
+//					id: true
+//				}
 			},
 			rgb_manifest: {
 				options: {

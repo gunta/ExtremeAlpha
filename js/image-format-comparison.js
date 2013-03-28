@@ -1,5 +1,6 @@
 (function () {
-	var render, drawBackground;
+	var render, drawBackground, globalOptions = {};
+	globalOptions.preventCaching = true;
 
 
 	window.addEventListener('load', function () {
@@ -17,22 +18,76 @@
 		queueA.addEventListener("complete", onCompleteQueueA);
 		$$('#btn-load-image-a').addEventListener('click', onClickButtonA);
 
+		function getHashBasedOnManifest(id, type) {
+			var found = false, originalFile = {}, resultFile = {};
+			switch (type) {
+				case "rgb":
+					for (var i = 0; i < rgbManifest.length; ++i) {
+						if (rgbManifest[i].id === id) {
+							originalFile = rgbManifest[i];
+							found = true;
+							break;
+						}
+					}
+					if (!found) {
+						for (var j = 0; j < rgbaManifest.length; ++j) {
+							if (rgbaManifest[j].id === id) {
+								originalFile = rgbaManifest[j];
+								found = true;
+								break;
+							}
+						}
+					}
+					resultFile.id = "rgb";
+					break;
+				case "alpha":
+					for (var k = 0; k < alphaManifest.length; ++k) {
+						if (alphaManifest[k].id === id) {
+							originalFile = alphaManifest[k];
+							found = true;
+							break;
+						}
+					}
+					resultFile.id = "alpha";
+					break;
+			}
+			if (found) {
+				resultFile.type = createjs.LoadQueue.IMAGE;
+				resultFile.src = originalFile.src;
+				if (globalOptions.preventCaching) {
+					resultFile.src += "?" + new Date().getTime();
+				}
+			}
+			return resultFile;
+		}
+
 		function onClickButtonA() {
+			var selectRgbA = $$('#select-image-a');
+			var selectRgbAid = selectRgbA.options[selectRgbA.selectedIndex].value;
+			var selectAlphaA = $$('#select-image-alpha-a');
+			var selectAlphaAid = selectAlphaA.options[selectAlphaA.selectedIndex].value;
+
+			var manifestA = [];
+			manifestA.push(getHashBasedOnManifest(selectRgbAid, "rgb"));
+			if (selectAlphaAid) {
+				manifestA.push(getHashBasedOnManifest(selectAlphaAid, "alpha"));
+			}
+
 			clockA.getDeltaAsString();
 
-			var manifestA = [
-				{id: "rgb", src: 'img/rgb/jpeg/JPEG-Color-NoSharpen-60.jpg?' + new Date().getTime(), type: createjs.LoadQueue.IMAGE, bytes: 3412341},
-				{id: "alpha", src: 'img/alpha/png/PNG-Alpha-32.png?' + new Date().getTime(), type: createjs.LoadQueue.IMAGE, bytes: 5414341}
-			];
-
+			queueA.removeAll();
 			queueA.loadManifest(manifestA);
 		}
 
 		function onCompleteQueueA() {
 			var images = {
-				rgb: queueA.getResult('rgb'),
-				alpha: queueA.getResult('alpha')
+				rgb: queueA.getResult('rgb')
 			};
+			var alpha = queueA.getResult('alpha');
+			if (alpha) {
+				images.alpha = alpha;
+			}
+
 			render(images);
 
 			var delta = clockA.getDeltaAsString();
@@ -54,6 +109,7 @@
 				selectAlphaB.options[selectAlphaB.options.length] = new Option(alphaManifest[j].id, alphaManifest[j].id);
 			}
 		}
+
 		populateSelects();
 
 		drawBackground = function (ctx) {
