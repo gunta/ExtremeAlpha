@@ -12,14 +12,22 @@
 		new FastClick(document.body);
 
 		var clocks = [];
-//		clock[0] = new utils.Clock();
-		var clockA = new utils.Clock();
-		clockA.getDelta();
-		var queueA = new createjs.LoadQueue();
-		queueA.setMaxConnections(4);
+		clocks[0] = new utils.Clock();
+		clocks[1] = new utils.Clock();
+		clocks[0].getDelta();
+		clocks[1].getDelta();
 
-		queueA.addEventListener("complete", onCompleteQueueA);
+		var queues = [];
+		queues[0] = new createjs.LoadQueue();
+		queues[1] = new createjs.LoadQueue();
+		queues[0].setMaxConnections(4);
+		queues[1].setMaxConnections(4);
+
+		queues[0].addEventListener("complete", onCompleteQueueA);
+		queues[1].addEventListener("complete", onCompleteQueueA);
+
 		$$('#btn-load-image-a').addEventListener('click', onClickButtonA);
+		$$('#btn-load-image-b').addEventListener('click', onClickButtonA);
 
 		function getHashBasedOnManifest(id, type) {
 			var found = false, originalFile = {}, resultFile = {};
@@ -76,10 +84,13 @@
 				manifestA.push(getHashBasedOnManifest(selectAlphaAid, "alpha"));
 			}
 
-			clockA.getDeltaAsString();
+			clocks[0].getDeltaAsString();
+			clocks[1].getDeltaAsString();
 
-			queueA.removeAll();
-			queueA.loadManifest(manifestA);
+			queues[0].removeAll();
+			queues[1].removeAll();
+			queues[0].loadManifest(manifestA);
+			queues[1].loadManifest(manifestA);
 		}
 
 		function getFilesizeAsString(rgbBytes, alphaBytes) {
@@ -95,19 +106,20 @@
 
 		function onCompleteQueueA(event) {
 			var images = {
-				rgb: queueA.getResult('rgb')
+				rgb: queues[0].getResult('rgb')
 			};
-			var rgbBytes = queueA.getResult('rgb', true).byteLength;
+			var rgbBytes = queues[0].getResult('rgb', true).byteLength;
 			var alphaBytes = 0;
-			var alpha = queueA.getResult('alpha');
+			var alpha = queues[0].getResult('alpha');
 			if (alpha) {
 				images.alpha = alpha;
-				alphaBytes = queueA.getResult('alpha', true).byteLength;
+				alphaBytes = queues[0].getResult('alpha', true).byteLength;
 			}
 
 			render(images);
 
-			var delta = clockA.getDeltaAsString();
+			var delta = clocks[0].getDeltaAsString();
+			var deltaB = clocks[1].getDeltaAsString();
 			$$('#result-requests-a').innerHTML = event.target._numItemsLoaded;
 			$$('#result-time-a').innerHTML = delta;
 			$$('#result-size-a').innerHTML = getFilesizeAsString(rgbBytes, alphaBytes);
