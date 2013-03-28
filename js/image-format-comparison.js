@@ -1,15 +1,18 @@
 (function () {
 	var render, drawBackground, globalOptions = {};
 	globalOptions.preventCaching = true;
+	globalOptions.backgroundPattern = "gray";
 
 
 	window.addEventListener('load', function () {
-		setTimeout(function () {
-			window.scrollTo(0, 1);
-		}, 0);
+//		setTimeout(function () {
+//			window.scrollTo(0, 1);
+//		}, 0);
 
 		new FastClick(document.body);
 
+		var clocks = [];
+//		clock[0] = new utils.Clock();
 		var clockA = new utils.Clock();
 		clockA.getDelta();
 		var queueA = new createjs.LoadQueue();
@@ -80,9 +83,12 @@
 		}
 
 		function getFilesizeAsString(rgbBytes, alphaBytes) {
-			var str = "" + Math.floor((rgbBytes + alphaBytes) / 1024) + "kb";
+			var str = "<span>";
+			str += Math.floor((rgbBytes + alphaBytes) / 1024) + "kb";
+			str += "</span>";
+
 			if (alphaBytes) {
-				str += " <small>(" + Math.floor((rgbBytes) / 1024) + "kb + " + Math.floor((alphaBytes) / 1024) + "kb" + ")</small>";
+				str += " <small style='color: gray;'>(" + Math.floor((rgbBytes) / 1024) + " + " + Math.floor((alphaBytes) / 1024) + "" + ")</small>";
 			}
 			return str;
 		}
@@ -126,16 +132,24 @@
 
 		drawBackground = function (ctx) {
 			var w = ctx.canvas.width, h = ctx.canvas.height, x, y;
-			var b = 16;
-			ctx.fillStyle = '#fff';
-			ctx.fillRect(0, 0, w, h);
-			ctx.fillStyle = '#ccc';
-			for (x = 0; x < w; x += b * 2) {
-				for (y = 0; y < h; y += b * 2) {
-					ctx.fillRect(x, y, b, b);
-					ctx.fillRect(x + b, y + b, b, b);
+			if (globalOptions.backgroundPattern === "gray") {
+				var b = 16;
+				ctx.fillStyle = '#fff';
+				ctx.fillRect(0, 0, w, h);
+				ctx.fillStyle = '#ccc';
+				for (x = 0; x < w; x += b * 2) {
+					for (y = 0; y < h; y += b * 2) {
+						ctx.fillRect(x, y, b, b);
+						ctx.fillRect(x + b, y + b, b, b);
+					}
 				}
+			} else if (globalOptions.backgroundPattern === "none") {
+				// do nothing
+			} else {
+				ctx.fillStyle = globalOptions.backgroundPattern;
+				ctx.fillRect(0, 0, w, h);
 			}
+
 		};
 
 		render = function (images) {
