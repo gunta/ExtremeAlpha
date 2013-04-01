@@ -13,7 +13,7 @@ module.exports = function (grunt) {
 			},
 			rgb_manifest: {
 				options: {
-					key: 'rgbManifest'
+					key: 'imagesManifest = imagesManifest || {}; imagesManifest.rgbManifest'
 				},
 				files: {
 					'json/rgb_manifest.js': ['img/rgb/**/*.jpg', 'img/rgb/**/*.png']
@@ -21,7 +21,7 @@ module.exports = function (grunt) {
 			},
 			rgba_manifest: {
 				options: {
-					key: 'rgbaManifest'
+					key: 'imagesManifest = imagesManifest || {}; imagesManifest.rgbaManifest'
 				},
 				files: {
 					'json/rgba_manifest.js': ['img/rgba/**/*.jpg', 'img/rgba/**/*.png', 'img/rgba/**/*.webp']
@@ -29,7 +29,7 @@ module.exports = function (grunt) {
 			},
 			alpha_manifest: {
 				options: {
-					key: 'alphaManifest'
+					key: 'imagesManifest = imagesManifest || {}; imagesManifest.alphaManifest'
 				},
 				files: {
 					'json/alpha_manifest.js': ['img/alpha/**/*.jpg', 'img/alpha/**/*.png']

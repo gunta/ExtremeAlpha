@@ -1,4 +1,4 @@
-var alphaManifest = [
+var imagesManifest = imagesManifest || {}; imagesManifest.alphaManifest = [
 	{id: 'AlphaJpegJPEGAlpha30', src: 'img/alpha/jpeg/JPEG-Alpha-30.jpg'},
 	{id: 'AlphaJpegJPEGAlpha40', src: 'img/alpha/jpeg/JPEG-Alpha-40.jpg'},
 	{id: 'AlphaJpegJPEGAlpha50', src: 'img/alpha/jpeg/JPEG-Alpha-50.jpg'},

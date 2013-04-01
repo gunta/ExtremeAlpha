@@ -1,4 +1,4 @@
-var rgbManifest = [
+var imagesManifest = imagesManifest || {}; imagesManifest.rgbManifest = [
 	{id: 'RgbJpegJPEGColorNoSharpen40', src: 'img/rgb/jpeg/JPEG-Color-NoSharpen-40.jpg'},
 	{id: 'RgbJpegJPEGColorNoSharpen50', src: 'img/rgb/jpeg/JPEG-Color-NoSharpen-50.jpg'},
 	{id: 'RgbJpegJPEGColorNoSharpen60', src: 'img/rgb/jpeg/JPEG-Color-NoSharpen-60.jpg'},

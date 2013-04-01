@@ -1,49 +1,88 @@
-(function () {
-	var render, drawBackground, globalOptions = {};
-	globalOptions.preventCaching = true;
-	globalOptions.backgroundPattern = "gray";
+//(function () {
 
+var App = {
+	options: {
+		preventCaching: true,
+		backgroundPattern: 'gray'
+	},
+	el: {
+		btnLoadImages: [
+			$$('#btn-load-image-a'),
+			$$('#btn-load-image-b')
+		],
+		rgbSelects: [
+			$$('#select-image-a'),
+			$$('#select-image-b')
+		],
+		alphaSelects: [
+			$$('#select-image-alpha-a'),
+			$$('#select-image-alpha-b')
+		],
+		resultRequests: [
+			$$('#result-requests-a'),
+			$$('#result-requests-b')
+		],
+		resultTimes: [
+			$$('#result-time-a'),
+			$$('#result-time-b')
+		],
+		resultSizes: [
+			$$('#result-size-a'),
+			$$('#result-size-b')
+		],
+		canvas: $$('#canvas')
+	},
+	clocks: [],
+	queues: [],
 
-	window.addEventListener('load', function () {
-//		setTimeout(function () {
-//			window.scrollTo(0, 1);
-//		}, 0);
-
+	initialize: function () {
+		// FastClick
 		new FastClick(document.body);
 
-		var clocks = [];
-		clocks[0] = new utils.Clock();
-		clocks[1] = new utils.Clock();
-		clocks[0].getDelta();
-		clocks[1].getDelta();
+		App.initializeEachN(0);
+		App.initializeEachN(1);
 
-		var queues = [];
-		queues[0] = new createjs.LoadQueue();
-		queues[1] = new createjs.LoadQueue();
-		queues[0].setMaxConnections(4);
-		queues[1].setMaxConnections(4);
+		// Queues
+		App.queues[0].addEventListener("complete", App.events.onCompleteQueueA);
+		App.queues[1].addEventListener("complete", App.events.onCompleteQueueB);
 
-		queues[0].addEventListener("complete", onCompleteQueueA);
-		queues[1].addEventListener("complete", onCompleteQueueA);
+		// Buttons
+		App.el.btnLoadImages[0].addEventListener('click', App.events.onClickButtonA);
+		App.el.btnLoadImages[1].addEventListener('click', App.events.onClickButtonB);
+	},
+	initializeEachN: function (n) {
+		// Clocks
+		App.clocks[n] = new utils.Clock();
+		App.clocks[n].getDelta();
 
-		$$('#btn-load-image-a').addEventListener('click', onClickButtonA);
-		$$('#btn-load-image-b').addEventListener('click', onClickButtonA);
+		// Queues
+		App.queues[n] = new createjs.LoadQueue();
+		App.queues[n].setMaxConnections(4);
 
-		function getHashBasedOnManifest(id, type) {
+		// Selects
+		for (var i = 0; i < imagesManifest.rgbManifest.length; ++i) {
+			App.el.rgbSelects[n].options[App.el.rgbSelects[n].options.length] = new Option(imagesManifest.rgbManifest[i].id, imagesManifest.rgbManifest[i].id);
+		}
+		for (var j = 0; j < imagesManifest.alphaManifest.length; ++j) {
+			App.el.alphaSelects[n].options[App.el.alphaSelects[n].options.length] = new Option(imagesManifest.alphaManifest[j].id, imagesManifest.alphaManifest[j].id);
+		}
+	},
+	helpers: {
+		getHashBasedOnManifest: function (id, type) {
 			var found = false, originalFile = {}, resultFile = {};
 			switch (type) {
 				case "rgb":
-					for (var i = 0; i < rgbManifest.length; ++i) {
-						if (rgbManifest[i].id === id) {
-							originalFile = rgbManifest[i];
+					for (var i = 0; i < imagesManifest.rgbManifest.length; ++i) {
+						if (imagesManifest.rgbManifest[i].id === id) {
+							originalFile = imagesManifest.rgbManifest[i];
 							found = true;
 							break;
 						}
 					}
 					if (!found) {
-						for (var j = 0; j < rgbaManifest.length; ++j) {
-							if (rgbaManifest[j].id === id) {
-								originalFile = rgbaManifest[j];
+						for (var j = 0; j < imagesManifest.rgbaManifest.length; ++j) {
+							if (imagesManifest.rgbaManifest[j].id === id) {
+								originalFile = imagesManifest.rgbaManifest[j];
 								found = true;
 								break;
 							}
@@ -52,9 +91,9 @@
 					resultFile.id = "rgb";
 					break;
 				case "alpha":
-					for (var k = 0; k < alphaManifest.length; ++k) {
-						if (alphaManifest[k].id === id) {
-							originalFile = alphaManifest[k];
+					for (var k = 0; k < imagesManifest.alphaManifest.length; ++k) {
+						if (imagesManifest.alphaManifest[k].id === id) {
+							originalFile = imagesManifest.alphaManifest[k];
 							found = true;
 							break;
 						}
@@ -65,86 +104,77 @@
 			if (found) {
 				resultFile.type = createjs.LoadQueue.IMAGE;
 				resultFile.src = originalFile.src;
-				if (globalOptions.preventCaching) {
+				if (App.options.preventCaching) {
 					resultFile.src += "?" + new Date().getTime();
 				}
 			}
 			return resultFile;
-		}
+		},
+		getFileSizeAsString: function (rgbBytes, alphaBytes) {
+			var totalKBytes = Math.floor((rgbBytes + alphaBytes) / 1024);
+			var rgbKBytes = Math.floor((rgbBytes) / 1024);
+			var alphaKBytes = Math.floor((alphaBytes) / 1024);
 
-		function onClickButtonA() {
-			var selectRgbA = $$('#select-image-a');
-			var selectRgbAid = selectRgbA.options[selectRgbA.selectedIndex].value;
-			var selectAlphaA = $$('#select-image-alpha-a');
-			var selectAlphaAid = selectAlphaA.options[selectAlphaA.selectedIndex].value;
-
-			var manifestA = [];
-			manifestA.push(getHashBasedOnManifest(selectRgbAid, "rgb"));
-			if (selectAlphaAid) {
-				manifestA.push(getHashBasedOnManifest(selectAlphaAid, "alpha"));
-			}
-
-			clocks[0].getDeltaAsString();
-			clocks[1].getDeltaAsString();
-
-			queues[0].removeAll();
-			queues[1].removeAll();
-			queues[0].loadManifest(manifestA);
-			queues[1].loadManifest(manifestA);
-		}
-
-		function getFilesizeAsString(rgbBytes, alphaBytes) {
-			var str = "<span>";
-			str += Math.floor((rgbBytes + alphaBytes) / 1024) + "kb";
-			str += "</span>";
-
+			var str = "<span>" + totalKBytes + "kb" + "</span>";
 			if (alphaBytes) {
-				str += " <small style='color: gray;'>(" + Math.floor((rgbBytes) / 1024) + " + " + Math.floor((alphaBytes) / 1024) + "" + ")</small>";
+				str += " <small style='color: gray;'>(" + rgbKBytes + " + " + alphaKBytes + "" + ")</small>";
 			}
 			return str;
 		}
+	},
+	events: {
+		onClickButton: function (n) {
+			var selectRgbAid = App.el.rgbSelects[n].options[App.el.rgbSelects[n].selectedIndex].value;
+			var selectAlphaAid = App.el.alphaSelects[n].options[App.el.alphaSelects[n].selectedIndex].value;
 
-		function onCompleteQueueA(event) {
+			var currentFiles = [];
+			currentFiles.push(App.helpers.getHashBasedOnManifest(selectRgbAid, "rgb"));
+			if (selectAlphaAid) {
+				currentFiles.push(App.helpers.getHashBasedOnManifest(selectAlphaAid, "alpha"));
+			}
+
+			console.dir(currentFiles);
+			App.clocks[n].getDeltaAsString();
+
+			App.queues[n].removeAll();
+			App.queues[n].loadManifest(currentFiles);
+		},
+		onClickButtonA: function () {
+			App.events.onClickButton(0);
+		},
+		onClickButtonB: function () {
+			App.events.onClickButton(1);
+		},
+		onCompleteQueue: function (event, n) {
 			var images = {
-				rgb: queues[0].getResult('rgb')
+				rgb: App.queues[n].getResult('rgb')
 			};
-			var rgbBytes = queues[0].getResult('rgb', true).byteLength;
+			var rgbBytes = App.queues[n].getResult('rgb', true).byteLength;
 			var alphaBytes = 0;
-			var alpha = queues[0].getResult('alpha');
+			var alpha = App.queues[n].getResult('alpha');
 			if (alpha) {
 				images.alpha = alpha;
-				alphaBytes = queues[0].getResult('alpha', true).byteLength;
+				alphaBytes = App.queues[n].getResult('alpha', true).byteLength;
 			}
 
-			render(images);
+			App.core.render(images);
 
-			var delta = clocks[0].getDeltaAsString();
-			var deltaB = clocks[1].getDeltaAsString();
-			$$('#result-requests-a').innerHTML = event.target._numItemsLoaded;
-			$$('#result-time-a').innerHTML = delta;
-			$$('#result-size-a').innerHTML = getFilesizeAsString(rgbBytes, alphaBytes);
+			var delta = App.clocks[n].getDeltaAsString();
+			App.el.resultRequests[n].innerHTML = event.target._numItemsLoaded;
+			App.el.resultTimes[n].innerHTML = delta;
+			App.el.resultSizes[n].innerHTML = App.helpers.getFileSizeAsString(rgbBytes, alphaBytes);
+		},
+		onCompleteQueueA: function (event) {
+			App.events.onCompleteQueue(event, 0);
+		},
+		onCompleteQueueB: function (event) {
+			App.events.onCompleteQueue(event, 1);
 		}
-
-		function populateSelects() {
-			var selectA = $$('#select-image-a');
-			var selectB = $$('#select-image-b');
-			var selectAlphaA = $$('#select-image-alpha-a');
-			var selectAlphaB = $$('#select-image-alpha-b');
-			for (var i = 0; i < rgbManifest.length; ++i) {
-				selectA.options[selectA.options.length] = new Option(rgbManifest[i].id, rgbManifest[i].id);
-				selectB.options[selectB.options.length] = new Option(rgbManifest[i].id, rgbManifest[i].id);
-			}
-			for (var j = 0; j < alphaManifest.length; ++j) {
-				selectAlphaA.options[selectAlphaA.options.length] = new Option(alphaManifest[j].id, alphaManifest[j].id);
-				selectAlphaB.options[selectAlphaB.options.length] = new Option(alphaManifest[j].id, alphaManifest[j].id);
-			}
-		}
-
-		populateSelects();
-
-		drawBackground = function (ctx) {
+	},
+	core: {
+		drawBackground: function (ctx) {
 			var w = ctx.canvas.width, h = ctx.canvas.height, x, y;
-			if (globalOptions.backgroundPattern === "gray") {
+			if (App.options.backgroundPattern === "gray") {
 				var b = 16;
 				ctx.fillStyle = '#fff';
 				ctx.fillRect(0, 0, w, h);
@@ -155,17 +185,16 @@
 						ctx.fillRect(x + b, y + b, b, b);
 					}
 				}
-			} else if (globalOptions.backgroundPattern === "none") {
+			} else if (App.options.backgroundPattern === "none") {
 				// do nothing
 			} else {
-				ctx.fillStyle = globalOptions.backgroundPattern;
+				ctx.fillStyle = App.options.backgroundPattern;
 				ctx.fillRect(0, 0, w, h);
 			}
 
-		};
-
-		render = function (images) {
-			var canvas = $$('#canvas');
+		},
+		render: function (images) {
+			var canvas = App.el.canvas;
 			var w = images.rgb.width;
 			var h = images.rgb.height;
 			canvas.width = w;
@@ -179,11 +208,20 @@
 			} else {
 				rgba = utils.renderRGBImage(images.rgb);
 			}
-			drawBackground(ctx);
+			App.core.drawBackground(ctx);
 			ctx.drawImage(rgba, 0, 0);
-		};
+		}
+	}
 
-	});
+
+};
+
+App.initialize();
+
+window.addEventListener('load', function () {
 
 
-}());
+});
+
+
+//}());

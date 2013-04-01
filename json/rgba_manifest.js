@@ -1,4 +1,4 @@
-var rgbaManifest = [
+var imagesManifest = imagesManifest || {}; imagesManifest.rgbaManifest = [
 	{id: 'RgbaPng8PNGRGBA1128', src: 'img/rgba/png8/PNG-RGBA1-128.png'},
 	{id: 'RgbaPng8PNGRGBA116', src: 'img/rgba/png8/PNG-RGBA1-16.png'},
 	{id: 'RgbaPng8PNGRGBA1256', src: 'img/rgba/png8/PNG-RGBA1-256.png'},
