@@ -1,10 +1,81 @@
 //(function () {
 
-var App = {
-	options: {
-		preventCaching: true,
-		backgroundPattern: 'gray'
+
+var SettingsModal = {
+	el: {
+		optionsRenderCanvasWhite: $$('#options-render-canvas-white'),
+		optionsRenderCanvasTransparent: $$('#options-render-canvas-transparent'),
+		optionsRenderCSSTransparent: $$('#options-render-css-transparent'),
+		checkboxRetina: $$('#checkbox-retina'),
+		optionsBackgroundNone: $$('#options-background-none'),
+		optionsBackgroundPattern: $$('#options-background-pattern'),
+		optionsBackgroundCustom: $$('#options-background-custom'),
+		inputBackgroundCustomPicker: $$('#input-background-custom-picker'),
+		checkboxDisableCache: $$('#checkbox-disable-cache')
 	},
+	initialize: function () {
+		// Load
+		SettingsModal.el.optionsRenderCanvasWhite.checked = utils.settings.renderMethod.get() === "canvas-white";
+		SettingsModal.el.optionsRenderCanvasTransparent.checked = utils.settings.renderMethod.get() === "canvas-transparent";
+		SettingsModal.el.optionsRenderCSSTransparent.checked = utils.settings.renderMethod.get() === "css-transparent";
+		SettingsModal.el.checkboxRetina.checked = utils.settings.retinaEnabled.get();
+		SettingsModal.el.optionsBackgroundNone.checked = utils.settings.backgroundType.get() === "none";
+		SettingsModal.el.optionsBackgroundPattern.checked = utils.settings.backgroundType.get() === "pattern";
+		SettingsModal.el.optionsBackgroundCustom.checked = utils.settings.backgroundType.get() === "custom";
+		SettingsModal.el.inputBackgroundCustomPicker.value = utils.settings.backgroundColor.get(); // NOTE: this is not working?
+		SettingsModal.el.inputBackgroundCustomPicker.disabled = utils.settings.backgroundType.get() !== "custom";
+		SettingsModal.el.checkboxDisableCache.checked = utils.settings.cacheDisabled.get();
+
+		// Events
+		SettingsModal.el.optionsRenderCanvasWhite.addEventListener('click', function () {
+			if (SettingsModal.el.optionsRenderCanvasWhite.checked) {
+				utils.settings.renderMethod.set("canvas-white");
+			}
+		});
+		SettingsModal.el.optionsRenderCanvasTransparent.addEventListener('click', function () {
+			if (SettingsModal.el.optionsRenderCanvasTransparent.checked) {
+				utils.settings.renderMethod.set("canvas-transparent");
+			}
+		});
+		SettingsModal.el.optionsRenderCSSTransparent.addEventListener('click', function () {
+			if (SettingsModal.el.optionsRenderCSSTransparent.checked) {
+				utils.settings.renderMethod.set("css-transparent");
+			}
+		});
+		SettingsModal.el.checkboxRetina.addEventListener('click', function () {
+			utils.settings.retinaEnabled.set(SettingsModal.el.checkboxRetina.checked);
+		});
+		SettingsModal.el.optionsBackgroundNone.addEventListener('click', function () {
+			if (SettingsModal.el.optionsBackgroundNone.checked) {
+				utils.settings.backgroundType.set("none");
+				SettingsModal.el.inputBackgroundCustomPicker.disabled = true;
+			}
+		});
+		SettingsModal.el.optionsBackgroundPattern.addEventListener('click', function () {
+			if (SettingsModal.el.optionsBackgroundPattern.checked) {
+				utils.settings.backgroundType.set("pattern");
+				SettingsModal.el.inputBackgroundCustomPicker.disabled = true;
+			}
+		});
+		SettingsModal.el.optionsBackgroundCustom.addEventListener('click', function () {
+			if (SettingsModal.el.optionsBackgroundCustom.checked) {
+				utils.settings.backgroundType.set("custom");
+				SettingsModal.el.inputBackgroundCustomPicker.disabled = false;
+			}
+		});
+		SettingsModal.el.inputBackgroundCustomPicker.addEventListener('change', function () {
+			utils.settings.backgroundColor.set(SettingsModal.el.inputBackgroundCustomPicker.checked);
+		});
+		SettingsModal.el.checkboxDisableCache.addEventListener('click', function () {
+			utils.settings.cacheDisabled.set(SettingsModal.el.checkboxDisableCache.checked);
+		});
+	}
+};
+
+SettingsModal.initialize();
+
+
+var App = {
 	el: {
 		btnLoadImages: [
 			$$('#btn-load-image-a'),
@@ -66,6 +137,8 @@ var App = {
 		for (var j = 0; j < imagesManifest.alphaManifest.length; ++j) {
 			App.el.alphaSelects[n].options[App.el.alphaSelects[n].options.length] = new Option(imagesManifest.alphaManifest[j].id, imagesManifest.alphaManifest[j].id);
 		}
+
+		// TODO: initialize from settings maybe
 	},
 	helpers: {
 		getHashBasedOnManifest: function (id, type) {
@@ -104,7 +177,7 @@ var App = {
 			if (found) {
 				resultFile.type = createjs.LoadQueue.IMAGE;
 				resultFile.src = originalFile.src;
-				if (App.options.preventCaching) {
+				if (utils.settings.cacheDisabled.get()) {
 					resultFile.src += "?" + new Date().getTime();
 				}
 			}
@@ -174,24 +247,27 @@ var App = {
 	core: {
 		drawBackground: function (ctx) {
 			var w = ctx.canvas.width, h = ctx.canvas.height, x, y;
-			if (App.options.backgroundPattern === "gray") {
-				var b = 16;
-				ctx.fillStyle = '#fff';
-				ctx.fillRect(0, 0, w, h);
-				ctx.fillStyle = '#ccc';
-				for (x = 0; x < w; x += b * 2) {
-					for (y = 0; y < h; y += b * 2) {
-						ctx.fillRect(x, y, b, b);
-						ctx.fillRect(x + b, y + b, b, b);
-					}
-				}
-			} else if (App.options.backgroundPattern === "none") {
-				// do nothing
-			} else {
-				ctx.fillStyle = App.options.backgroundPattern;
-				ctx.fillRect(0, 0, w, h);
-			}
 
+			switch (utils.settings.backgroundType.get()) {
+				case "none":
+					break;
+				case "pattern":
+					var b = 16;
+					ctx.fillStyle = '#fff';
+					ctx.fillRect(0, 0, w, h);
+					ctx.fillStyle = '#ccc';
+					for (x = 0; x < w; x += b * 2) {
+						for (y = 0; y < h; y += b * 2) {
+							ctx.fillRect(x, y, b, b);
+							ctx.fillRect(x + b, y + b, b, b);
+						}
+					}
+					break;
+				case "custom":
+					ctx.fillStyle = utils.settings.backgroundColor.get();
+					ctx.fillRect(0, 0, w, h);
+					break;
+			}
 		},
 		render: function (images) {
 			var canvas = App.el.canvas;
@@ -199,8 +275,9 @@ var App = {
 			var h = images.rgb.height;
 			canvas.width = w;
 			canvas.height = h;
-			canvas.style.width = w / 2 + "px";
-			canvas.style.height = h / 2 + "px";
+			var pixelRatio = utils.settings.retinaEnabled.get() ? 2 : 1;
+			canvas.style.width = w / pixelRatio + "px";
+			canvas.style.height = h / pixelRatio + "px";
 			var ctx = canvas.getContext('2d');
 			var rgba;
 			if (images.alpha) {

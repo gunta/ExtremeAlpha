@@ -11,7 +11,7 @@
     <meta name="viewport" id="vp" content="initial-scale=1.0,user-scalable=no,maximum-scale=1"
           media="(device-height: 568px)"/>
     <meta name="apple-mobile-web-app-capable" content="yes"/>
-    <link rel="icon" type="image/png" href="icon-res/1364455510_color.png" />
+    <link rel="icon" type="image/png" href="icon-res/1364455510_color.png"/>
     <link href="http://netdna.bootstrapcdn.com/twitter-bootstrap/2.3.1/css/bootstrap-combined.min.css" rel="stylesheet"
           media="screen">
     <style type="text/css">
@@ -77,12 +77,25 @@
             width: 25%;
         }
 
+        .modal-body {
+            padding-top: 0;
+            padding-bottom: 5px;
+        }
+
+        .modal-body legend {
+            margin-bottom: 16px;
+        }
+
+        .modal-body select {
+            width: 310px;
+        }
+
         @media (max-width: 480px) {
             #canvas-wrapper-a {
                 height: 450px;
             }
 
-            select {
+            #container select {
                 width: 38px;
             }
 
@@ -97,6 +110,17 @@
             .table {
                 margin-bottom: 5px;
             }
+
+            .modal-body select {
+                width: 270px;
+            }
+
+            .modal-body legend {
+                font-weight: bold;
+                margin-bottom: 14px;
+                line-height: 26px;
+                font-size: 16px;
+            }
         }
 
 
@@ -109,13 +133,17 @@
     <script defer type="text/javascript" src="json/rgb_manifest.js"></script>
     <script defer type="text/javascript" src="json/rgba_manifest.js"></script>
     <script defer type="text/javascript" src="json/alpha_manifest.js"></script>
+    <script defer type="text/javascript" src="js/object.js"></script>
+    <script defer type="text/javascript" src="js/settings.js"></script>
     <script defer type="text/javascript" src="js/clock.js"></script>
     <script defer type="text/javascript" src="js/image-common.js"></script>
     <script defer type="text/javascript" src="js/image-format-comparison.js"></script>
 </head>
 <body>
 <div id="container" class="container">
-    <h2 class="hidden-phone">Image Alpha Quality Check Tool <small>by <a href="https://twitter.com/gunta85">@gunta85</a></small></h2>
+    <h2 class="hidden-phone">Image Alpha Quality Check Tool
+        <small>by <a href="https://twitter.com/gunta85">@gunta85</a></small>
+    </h2>
 
     <form class="form-inline">
         <label for="select-image-a"><i class="icon-colors-rgb" title="RGB"></i> <strong>A</strong>
@@ -158,22 +186,26 @@
             <td id="result-requests-a" class="result-requests">-</td>
             <td id="result-time-a" class="result-time">-</td>
             <td id="result-size-a" class="result-size">-</td>
-            <td class="result-button"><button class="btn btn-small" id="btn-load-image-a" data-loading-text="Loading">Load A</button></td>
+            <td class="result-button">
+                <button class="btn btn-small" id="btn-load-image-a" data-loading-text="Loading">Load A</button>
+            </td>
             <!--<td id="result-progress-a">-->
-                <!--<div class="progress progress-striped active">-->
-                    <!--<div class="bar" style="width: 0%;"></div>-->
-                <!--</div>-->
+            <!--<div class="progress progress-striped active">-->
+            <!--<div class="bar" style="width: 0%;"></div>-->
+            <!--</div>-->
             <!--</td>-->
         </tr>
         <tr>
             <td id="result-requests-b" class="result-requests">-</td>
             <td id="result-time-b" class="result-time">-</td>
             <td id="result-size-b" class="result-size">-</td>
-            <td class="result-button"><button class="btn btn-small" id="btn-load-image-b" data-loading-text="Loading">Load B</button></td>
+            <td class="result-button">
+                <button class="btn btn-small" id="btn-load-image-b" data-loading-text="Loading">Load B</button>
+            </td>
             <!--<td id="result-progress-b">-->
-                <!--<div class="progress progress-striped ">-->
-                    <!--<div class="bar" style="width: 0%;"></div>-->
-                <!--</div>-->
+            <!--<div class="progress progress-striped ">-->
+            <!--<div class="bar" style="width: 0%;"></div>-->
+            <!--</div>-->
             <!--</td>-->
         </tr>
         </tbody>
@@ -190,6 +222,86 @@
 
 <div id="container-image-b" class="needsclick">
 
+</div>
+
+
+<!-- Button to trigger modal -->
+<a href="#optionsModal" role="button" class="btn" data-toggle="modal">Launch demo modal</a>
+
+<!-- Modal -->
+<div id="optionsModal" class="modal xfade" tabindex="-1" role="dialog">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">×</button>
+        <h3 id="myModalLabel">Settings</h3>
+    </div>
+    <div class="modal-body">
+        <form>
+            <fieldset>
+                <!--<label>Label name</label>-->
+                <!--<input type="text" placeholder="Type something…">-->
+                <!--<span class="help-block">Example block-level help text here.</span>-->
+
+
+                <legend>Render</legend>
+                <!--<label class="radio">-->
+                <!--<input type="radio" name="options-render-method" id="options-render-canvas-white" value="canvas-white" checked>-->
+                <!--Canvas Inverse Alpha Mask (black+white)-->
+                <!--</label>-->
+                <!--<label class="radio">-->
+                <!--<input type="radio" name="options-render-method" id="options-render-canvas-transparent" value="canvas-transparent" disabled>-->
+                <!--Canvas Alpha Channel (black+transparent)-->
+                <!--</label>-->
+                <!--<label class="radio">-->
+                <!--<input type="radio" name="options-render-method" id="options-render-css-transparent" value="options-render-css-transparent" disabled>-->
+                <!--CSS3 Mask Alpha Channel (black+transparent)-->
+                <!--</label>-->
+
+                <label for="select-render-method">  <!--<strong>Render method</strong>-->
+                    <select name="select-render-method" id="select-render-method">
+                        <option>Canvas Inverse Alpha Mask (black+white)</option>
+                        <option>Canvas Alpha Channel (black+transparent)</option>
+                        <option>CSS3 Alpha Channel (black+transparent)</option>
+                    </select>
+                </label>
+
+
+                <label class="checkbox">
+                    <input type="checkbox" id="checkbox-retina" checked> Retina display
+                </label>
+
+                <legend>Background</legend>
+
+                <label class="radio">
+                    <input type="radio" name="options-background" id="options-background-none" value="none">
+                    No background
+                </label>
+                <label class="radio">
+                    <input type="radio" name="options-background" id="options-background-pattern" value="pattern"
+                           checked>
+                    Checked pattern
+                </label>
+                <label class="radio">
+                    <input type="radio" name="options-background" id="options-background-custom" value="custom">
+                    Custom color
+                </label>
+
+                <input type="color" name="input-background-custom-picker" id="input-background-custom-picker">
+
+
+                <legend>Cache</legend>
+
+                <label class="checkbox">
+                    <input type="checkbox" id="checkbox-disable-cache" checked> Disable cache
+                </label>
+
+                <!--<button type="submit" class="btn">Submit</button>-->
+            </fieldset>
+        </form>
+
+    </div>
+    <!--<div class="modal-footer">-->
+    <!--<button class="btn" data-dismiss="modal">Close</button>-->
+    <!--</div>-->
 </div>
 
 
