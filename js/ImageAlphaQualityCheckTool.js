@@ -3,9 +3,7 @@
 
 var SettingsModal = {
 	el: {
-		optionsRenderCanvasWhite: $$('#options-render-canvas-white'),
-		optionsRenderCanvasTransparent: $$('#options-render-canvas-transparent'),
-		optionsRenderCSSTransparent: $$('#options-render-css-transparent'),
+		selectRenderMethod: $$('#select-render-method'),
 		checkboxRetina: $$('#checkbox-retina'),
 		optionsBackgroundNone: $$('#options-background-none'),
 		optionsBackgroundPattern: $$('#options-background-pattern'),
@@ -15,9 +13,17 @@ var SettingsModal = {
 	},
 	initialize: function () {
 		// Load
-		SettingsModal.el.optionsRenderCanvasWhite.checked = utils.settings.renderMethod.get() === "canvas-white";
-		SettingsModal.el.optionsRenderCanvasTransparent.checked = utils.settings.renderMethod.get() === "canvas-transparent";
-		SettingsModal.el.optionsRenderCSSTransparent.checked = utils.settings.renderMethod.get() === "css-transparent";
+		switch(utils.settings.renderMethod.get()) {
+			case "canvas-white":
+				SettingsModal.el.selectRenderMethod.selectedIndex = 0;
+				break;
+			case "canvas-transparent":
+				SettingsModal.el.selectRenderMethod.selectedIndex = 1;
+				break;
+			case "css-transparent":
+				SettingsModal.el.selectRenderMethod.selectedIndex = 2;
+				break;
+		}
 		SettingsModal.el.checkboxRetina.checked = utils.settings.retinaEnabled.get();
 		SettingsModal.el.optionsBackgroundNone.checked = utils.settings.backgroundType.get() === "none";
 		SettingsModal.el.optionsBackgroundPattern.checked = utils.settings.backgroundType.get() === "pattern";
@@ -27,20 +33,9 @@ var SettingsModal = {
 		SettingsModal.el.checkboxDisableCache.checked = utils.settings.cacheDisabled.get();
 
 		// Events
-		SettingsModal.el.optionsRenderCanvasWhite.addEventListener('click', function () {
-			if (SettingsModal.el.optionsRenderCanvasWhite.checked) {
-				utils.settings.renderMethod.set("canvas-white");
-			}
-		});
-		SettingsModal.el.optionsRenderCanvasTransparent.addEventListener('click', function () {
-			if (SettingsModal.el.optionsRenderCanvasTransparent.checked) {
-				utils.settings.renderMethod.set("canvas-transparent");
-			}
-		});
-		SettingsModal.el.optionsRenderCSSTransparent.addEventListener('click', function () {
-			if (SettingsModal.el.optionsRenderCSSTransparent.checked) {
-				utils.settings.renderMethod.set("css-transparent");
-			}
+		SettingsModal.el.selectRenderMethod.addEventListener('change', function () {
+			var renderMethod = SettingsModal.el.selectRenderMethod.options[SettingsModal.el.selectRenderMethod.selectedIndex].value;
+			utils.settings.renderMethod.set(renderMethod);
 		});
 		SettingsModal.el.checkboxRetina.addEventListener('click', function () {
 			utils.settings.retinaEnabled.set(SettingsModal.el.checkboxRetina.checked);
@@ -197,6 +192,8 @@ var App = {
 	},
 	events: {
 		onClickButton: function (n) {
+			$(App.el.btnLoadImages[n]).button('loading');
+
 			var selectRgbAid = App.el.rgbSelects[n].options[App.el.rgbSelects[n].selectedIndex].value;
 			var selectAlphaAid = App.el.alphaSelects[n].options[App.el.alphaSelects[n].selectedIndex].value;
 
@@ -206,7 +203,6 @@ var App = {
 				currentFiles.push(App.helpers.getHashBasedOnManifest(selectAlphaAid, "alpha"));
 			}
 
-			console.dir(currentFiles);
 			App.clocks[n].getDeltaAsString();
 
 			App.queues[n].removeAll();
@@ -236,6 +232,8 @@ var App = {
 			App.el.resultRequests[n].innerHTML = event.target._numItemsLoaded;
 			App.el.resultTimes[n].innerHTML = delta;
 			App.el.resultSizes[n].innerHTML = App.helpers.getFileSizeAsString(rgbBytes, alphaBytes);
+
+			$(App.el.btnLoadImages[n]).button('reset');
 		},
 		onCompleteQueueA: function (event) {
 			App.events.onCompleteQueue(event, 0);
