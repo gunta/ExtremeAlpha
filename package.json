@@ -1,5 +1,5 @@
 {
-  "name": "Image Alpha Quality Check Tool",
+  "name": "ImageAlphaQualityCheckTool",
   "version": "0.2.0",
   "description": "Compares PNG24, PNG8, JPEG+PNG8, JPEG+Alpha JPEG, WebP, JPEG2000 with alpha channels support",
   "main": "index.js",

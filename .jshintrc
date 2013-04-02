@@ -16,6 +16,7 @@
 	"smarttabs": true,
 	"devel": true,
 	"globals": {
+		"$": false,
 		"$$": false,
 		"FastClick": false,
 		"imagesManifest": false,

@@ -83,7 +83,11 @@ body {
 
 .modal-body select {
     width: 310px;
-}
+    }
+
+/*.btn-mini .settings-button {*/
+    /*display: none;*/
+/*}*/
 
 @media (max-width: 480px) {
     #canvas-wrapper-a {
@@ -121,7 +125,7 @@ body {
         margin-left: 20%;
     }
 
-    .settings-button .icon-settings {
+    .btn-mini .settings-button .icon-settings {
         width: 16px;
         height: 16px;
     }

@@ -1,7 +1,31 @@
 # Image Alpha Quality Check Tool 
 
+New project names:
+ImageMaximum
+
+ImageGenkai
+We can do better
+ImageLimit
+
+Adobe Alpha Suite
+Image Limit Suite
+Google Image Speed Suite
+Image Optim NextLevel
+Including: 
+- Quality Check/Comparator Tool (proves the theory)
+- Image Generator/Compressor Tool (can be ImageAlpha)
+- Image List Generator Tool 
+- Image List Generator WebSocket Server
+- Image Alpha Blending Library: CreateJS, CSS
 
 
+
+
+# DONE
+- Add localstorage for options
+- Retina display
+- Cache disable
+- Make modal appear
 
 # TODO
 
@@ -18,6 +42,8 @@ file://localhost/Users/gunther_brunner/Desktop/TestingImages/TryTwo/Tools/libweb
 - Create button
 - Open source
 
+- 
+
 - Write blog post
 
 
@@ -25,10 +51,32 @@ file://localhost/Users/gunther_brunner/Desktop/TestingImages/TryTwo/Tools/libweb
 - CSS Render
 - Canvas transparent render
 - Refresh system
-- Add localstorage for options
 - Add color picker
-- Make modal appear
+- 
 - Design settings button
 - Improve CSS for selects
-- Retina display
-- Cache disable
+
+
+# OTHER TOOLS 
+
+## Generating step
+
+
+
+- Grunt.js plugin image-alpha-generate-multiple-formats 
+Input: One big PNG 24 bits
+Output: 
+- Generate 10x PNG, 10x JPEG, 10x WEBP
+- 1or2 JSON
+
+image-alpha-generate-multiple-formats GUI
+- WRAP the plugin in a node-webkit app, containing a nodejs websocket server
+
+# Checking step
+- Image Alpha Quality Check Tool
+
+# Using step
+- Library code for:
+- ImageAlphaLoader.js
+- CreateJS
+- CSS

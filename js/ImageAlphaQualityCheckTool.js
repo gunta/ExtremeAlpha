@@ -13,7 +13,7 @@ var SettingsModal = {
 	},
 	initialize: function () {
 		// Load
-		switch(utils.settings.renderMethod.get()) {
+		switch (utils.settings.renderMethod.get()) {
 			case "canvas-white":
 				SettingsModal.el.selectRenderMethod.selectedIndex = 0;
 				break;
@@ -28,9 +28,18 @@ var SettingsModal = {
 		SettingsModal.el.optionsBackgroundNone.checked = utils.settings.backgroundType.get() === "none";
 		SettingsModal.el.optionsBackgroundPattern.checked = utils.settings.backgroundType.get() === "pattern";
 		SettingsModal.el.optionsBackgroundCustom.checked = utils.settings.backgroundType.get() === "custom";
-		SettingsModal.el.inputBackgroundCustomPicker.value = utils.settings.backgroundColor.get(); // NOTE: this is not working?
-		SettingsModal.el.inputBackgroundCustomPicker.disabled = utils.settings.backgroundType.get() !== "custom";
 		SettingsModal.el.checkboxDisableCache.checked = utils.settings.cacheDisabled.get();
+		$(SettingsModal.el.inputBackgroundCustomPicker).spectrum({
+			color: utils.settings.backgroundColor.get(),
+			disabled: utils.settings.backgroundType.get() !== "custom",
+			showInitial: true,
+			chooseText: "Choose",
+			cancelText: "Cancel",
+			preferredFormat: "hex6",
+			change: function (color) {
+				utils.settings.backgroundColor.set(color.toHexString());
+			}
+		});
 
 		// Events
 		SettingsModal.el.selectRenderMethod.addEventListener('change', function () {
@@ -43,23 +52,20 @@ var SettingsModal = {
 		SettingsModal.el.optionsBackgroundNone.addEventListener('click', function () {
 			if (SettingsModal.el.optionsBackgroundNone.checked) {
 				utils.settings.backgroundType.set("none");
-				SettingsModal.el.inputBackgroundCustomPicker.disabled = true;
+				$(SettingsModal.el.inputBackgroundCustomPicker).spectrum('disable');
 			}
 		});
 		SettingsModal.el.optionsBackgroundPattern.addEventListener('click', function () {
 			if (SettingsModal.el.optionsBackgroundPattern.checked) {
 				utils.settings.backgroundType.set("pattern");
-				SettingsModal.el.inputBackgroundCustomPicker.disabled = true;
+				$(SettingsModal.el.inputBackgroundCustomPicker).spectrum('disable');
 			}
 		});
 		SettingsModal.el.optionsBackgroundCustom.addEventListener('click', function () {
 			if (SettingsModal.el.optionsBackgroundCustom.checked) {
 				utils.settings.backgroundType.set("custom");
-				SettingsModal.el.inputBackgroundCustomPicker.disabled = false;
+				$(SettingsModal.el.inputBackgroundCustomPicker).spectrum('enable');
 			}
-		});
-		SettingsModal.el.inputBackgroundCustomPicker.addEventListener('change', function () {
-			utils.settings.backgroundColor.set(SettingsModal.el.inputBackgroundCustomPicker.checked);
 		});
 		SettingsModal.el.checkboxDisableCache.addEventListener('click', function () {
 			utils.settings.cacheDisabled.set(SettingsModal.el.checkboxDisableCache.checked);

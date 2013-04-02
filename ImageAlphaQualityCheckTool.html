@@ -12,17 +12,17 @@
           media="(device-height: 568px)"/>
     <meta name="apple-mobile-web-app-capable" content="yes"/>
     <link rel="icon" type="image/png" href="icon-res/1364455510_color.png"/>
-    <link href="http://netdna.bootstrapcdn.com/twitter-bootstrap/2.3.1/css/bootstrap-combined.min.css" rel="stylesheet"
-          media="screen">
-    <!--<link href="http://netdna.bootstrapcdn.com/bootswatch/2.3.1/united/bootstrap.min.css" rel="stylesheet"-->
-          <!--media="screen">-->
 
+    <link rel="stylesheet" type="text/css" href="components/html-bootstrap-assets/css/bootstrap.min.css" media="all"/>
+    <link rel="stylesheet" type="text/css" href="components/html-bootstrap-assets/css/bootstrap-responsive.min.css"
+          media="all"/>
+    <link rel="stylesheet" type="text/css" href="components/spectrum/spectrum.css" media="all"/>
     <link rel="stylesheet" type="text/css" href="css/style.css" media="all"/>
 
-    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
-    <script src="http://netdna.bootstrapcdn.com/twitter-bootstrap/2.3.1/js/bootstrap.js"></script>
-    <script defer type="text/javascript" src="components/ftlabs-fastclick/lib/fastclick.js"></script>
-    <!--<script defer type="text/javascript" src="http://code.createjs.com/preloadjs-0.3.0.min.js"></script>-->
+    <script defer type="text/javascript" src="components/jquery/jquery.min.js"></script>
+    <script defer type="text/javascript" src="components/html-bootstrap-assets/js/bootstrap.min.js"></script>
+    <script defer type="text/javascript" src="components/fastclick/build/fastclick.min.js"></script>
+    <script defer type="text/javascript" src="components/spectrum/build/spectrum-min.js"></script>
     <script defer type="text/javascript" src="components/preloadjs/preloadjs-NEXT.min.js"></script>
     <script defer type="text/javascript" src="json/rgb_manifest.js"></script>
     <script defer type="text/javascript" src="json/rgba_manifest.js"></script>
@@ -39,7 +39,8 @@
         <small>by <a href="https://twitter.com/gunta85">@gunta85</a></small>
 
         <!-- Button to trigger modal -->
-        <a href="#optionsModal" role="button" class="btn settings-button" data-toggle="modal"><i class="icon-settings"></i></a>
+        <a href="#optionsModal" role="button" class="btn settings-button" data-toggle="modal"><i
+                class="icon-settings"></i></a>
     </h2>
 
     <form class="form-inline">
@@ -64,9 +65,7 @@
                 <option value="">-</option>
             </select>
         </label>
-
     </form>
-
 
     <table class="table table-condensed" id="table">
         <thead>
@@ -75,10 +74,10 @@
             <th class="result-time">Time</th>
             <th class="result-size">Size
                 <!-- Button to trigger modal -->
-                <a href="#optionsModal" role="button" class="btn btn-mini settings-button" data-toggle="modal"><i class="icon-settings"></i></a>
+                <a href="#optionsModal" role="button" class="btn btn-mini
+                 settings-button" data-toggle="modal"><i class="icon-settings"></i></a>
             </th>
             <th class="result-button">Image</th>
-            <!--<th>Progress</th>-->
         </tr>
         </thead>
         <tbody>
@@ -89,11 +88,6 @@
             <td class="result-button">
                 <button class="btn btn-small" id="btn-load-image-a" data-loading-text="Loading">Load A</button>
             </td>
-            <!--<td id="result-progress-a">-->
-            <!--<div class="progress progress-striped active">-->
-            <!--<div class="bar" style="width: 0%;"></div>-->
-            <!--</div>-->
-            <!--</td>-->
         </tr>
         <tr>
             <td id="result-requests-b" class="result-requests">-</td>
@@ -102,16 +96,9 @@
             <td class="result-button">
                 <button class="btn btn-small" id="btn-load-image-b" data-loading-text="Loading">Load B</button>
             </td>
-            <!--<td id="result-progress-b">-->
-            <!--<div class="progress progress-striped ">-->
-            <!--<div class="bar" style="width: 0%;"></div>-->
-            <!--</div>-->
-            <!--</td>-->
         </tr>
         </tbody>
     </table>
-
-
 </div>
 
 <div id="container-image-a" class="needsclick">
@@ -119,11 +106,6 @@
         <canvas id="canvas"></canvas>
     </div>
 </div>
-
-<div id="container-image-b" class="needsclick">
-
-</div>
-
 
 <!-- Modal -->
 <div id="optionsModal" class="modal hide" tabindex="-1" role="dialog">
@@ -134,14 +116,9 @@
     <div class="modal-body">
         <form>
             <fieldset>
-                <!--<label>Label name</label>-->
-                <!--<input type="text" placeholder="Type something…">-->
-                <!--<span class="help-block">Example block-level help text here.</span>-->
-
-
                 <legend>Render</legend>
 
-                <label for="select-render-method">  <!--<strong>Render method</strong>-->
+                <label for="select-render-method">
                     <select name="select-render-method" id="select-render-method">
                         <option value="canvas-white">Canvas Inverse Alpha Mask (black+white)</option>
                         <option value="canvas-transparent" disabled>Canvas Alpha Channel (black+transparent)</option>
@@ -170,8 +147,8 @@
                     Custom color
                 </label>
 
-                <input type="color" name="input-background-custom-picker" id="input-background-custom-picker">
-
+                <!--<input type="color" name="input-background-custom-picker" id="input-background-custom-picker">-->
+                <input type='text' id="input-background-custom-picker" />
 
                 <legend>Cache</legend>
 
@@ -184,7 +161,7 @@
 
     </div>
     <div class="modal-footer">
-    <button class="btn" data-dismiss="modal">Close</button>
+        <button class="btn" data-dismiss="modal">Close</button>
     </div>
 </div>
 
