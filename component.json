@@ -1,0 +1,20 @@
+{
+  "name": "ImageAlphaQualityCheckTool",
+  "version": "0.2.0",
+  "dependencies": {
+    "fastclick": "~0.6.2",
+    "jquery": "~1.9.1",
+    "spectrum": "~1.0.9",
+    "preloadjs": "~undefined",
+    "html-bootstrap-assets": "git://github.com/srigi/html-bootstrap-assets.git#~2.3.1"
+  },
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "components"
+  ],
+  "devDependencies": {
+    "fastclick": "~0.6.2",
+    "bootstrap": "~2.3.1"
+  }
+}
