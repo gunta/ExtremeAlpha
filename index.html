@@ -2,7 +2,7 @@
 <html lang="en-US">
 <head>
     <meta charset="UTF-8">
-    <title>Image Alpha Quality Check Tool</title>
+    <title>ExtremeAlpha</title>
     <!-- standard viewport tag to set the viewport to the device's width, Android 2.3 devices need this so 100% width works properly and
 	doesn't allow children to blow up the viewport width-->
     <meta name="viewport" id="vp" content="initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width"/>
@@ -24,6 +24,7 @@
     <script defer type="text/javascript" src="components/fastclick/build/fastclick.min.js"></script>
     <script defer type="text/javascript" src="components/spectrum/build/spectrum-min.js"></script>
     <script defer type="text/javascript" src="components/preloadjs/preloadjs-NEXT.min.js"></script>
+
     <script defer type="text/javascript" src="json/rgb_manifest.js"></script>
     <script defer type="text/javascript" src="json/rgba_manifest.js"></script>
     <script defer type="text/javascript" src="json/alpha_manifest.js"></script>
@@ -31,11 +32,11 @@
     <script defer type="text/javascript" src="js/Settings.js"></script>
     <script defer type="text/javascript" src="js/Clock.js"></script>
     <script defer type="text/javascript" src="js/ImageCommon.js"></script>
-    <script defer type="text/javascript" src="js/ImageAlphaQualityCheckTool.js"></script>
+    <script defer type="text/javascript" src="js/ExtremeAlpha.js"></script>
 </head>
 <body>
 <div id="container" class="container">
-    <h2 class="hidden-phone">Image Alpha Quality Check Tool
+    <h2 class="hidden-phone">ExtremeAlpha
         <small>by <a href="https://twitter.com/gunta85">@gunta85</a></small>
 
         <!-- Button to trigger modal -->
@@ -123,6 +124,7 @@
                         <option value="canvas-white">Canvas Inverse Alpha Mask (black+white)</option>
                         <option value="canvas-transparent">Canvas Alpha Channel (black+transparent)</option>
                         <option value="css-transparent" disabled>CSS3 Alpha Channel (black+transparent)</option>
+                        <option value="svg-transparent" disabled>SVG Container Alpha Channel (black+transparent)</option>
                     </select>
                 </label>
 
